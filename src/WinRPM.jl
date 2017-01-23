@@ -53,18 +53,11 @@ elseif is_windows()
     function download(source::AbstractString; retry=5)
         dest = Vector{UInt16}(261)
         for i in 1:retry
-            res = ccall((:URLDownloadToCacheFileW, :urlmon), stdcall, Cuint,
-              (Ptr{Void}, Ptr{UInt16}, Ptr{UInt16}, Clong, Cint, Ptr{Void}),
-              C_NULL, transcode(UInt16, source), dest, sizeof(dest) >> 1, 0, C_NULL)
-            if res == 0
-                resize!(dest, findfirst(dest, 0) - 1)
-                filename = transcode(String, dest)
-                if isfile(filename)
-                    return readstring(filename), 200
-                end
-            else
-                warn("Unknown download failure, error code: $res")
-            end
+			try 
+				filename = Base.download(source)
+				return readstring(filename), 200
+			end
+            warn("Unknown download failure")
             warn("Retry $i/$retry downloading: $source")
         end
         return "", 0

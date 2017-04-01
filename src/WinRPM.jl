@@ -50,15 +50,21 @@ if is_unix()
         unsafe_string(x.body), x.http_code
     end
 elseif is_windows()
+    function psdownload(url, to)
+      run(`powershell (new-object system.net.webClient).downloadFile(\"$url\", \"$to\")`)
+      return to
+    end
+    psdownload(url) = psdownload(url, tempname())
+
     function download(source::AbstractString; retry=5)
         dest = Vector{UInt16}(261)
         for i in 1:retry
-			try 
-				filename = Base.download(source)
-				return readstring(filename), 200
-			end
-            warn("Unknown download failure")
-            warn("Retry $i/$retry downloading: $source")
+    			try
+    				filename = psdownload(source)
+    				return readstring(filename), 200
+    			end
+              warn("Unknown download failure")
+              warn("Retry $i/$retry downloading: $source")
         end
         return "", 0
     end

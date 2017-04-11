@@ -1,5 +1,12 @@
 Changelog: This version of function "download()" in file "WinRPM.jl" uses powershell instead to avoid downloading errors.
 
+How to use:
+
+```julia
+Pkg.rm("WinRPM")
+Pkg.clone("https://github.com/cafe/WinRPM.jl.git")
+```
+
 Introduction
 ============
 

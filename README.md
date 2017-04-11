@@ -1,3 +1,5 @@
+Changelog: This version of function "download()" in file "WinRPM.jl" uses powershell instead to avoid downloading errors.
+
 Introduction
 ============
 
